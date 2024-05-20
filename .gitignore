@@ -1,0 +1,16 @@
+
+# Quartus Project Folders
+
+db/
+incremental_db/
+output_files/
+simulation/
+
+# Quartus project files
+
+*.cmp
+*.qpf
+*.qsf
+*.qws
+*.bak
+*.rpt
