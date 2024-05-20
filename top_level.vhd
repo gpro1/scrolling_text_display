@@ -43,7 +43,8 @@ display_driver: entity work.display_driver(rtl)
 		i_i2c_data		=> i2c_receive_data,
 		i_i2c_rdy		=> i2c_rdy,
 		o_i2c_en			=> i2c_en,
-		o_i2c_addr_rw	=> i2c_addr
-      o_i2c_data		=> i2c_transmit_data,
+		o_i2c_addr_rw	=> i2c_addr,
+      o_i2c_data		=> i2c_transmit_data
+		);
 
 end rtl;

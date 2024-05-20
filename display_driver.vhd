@@ -9,8 +9,10 @@ entity display_driver is
 	i_i2c_rdy		: in std_logic;
 	o_i2c_en			: out std_logic; 
 	o_i2c_addr_rw	: out unsigned(7 downto 0);
-	o_i2c_data		: out unsigned(7 downto 0);
+	o_i2c_data		: out unsigned(7 downto 0)
 	);
+	
+end entity;
 	
 architecture rtl of display_driver is
 
