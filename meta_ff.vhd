@@ -7,7 +7,8 @@
 --
 -- Desc: 
 --
---	Double register to prevent metastability issues.
+--	Double register to prevent metastability issues. Useful for crossing from a slow to fast
+-- clock domain or a fast to slow clock domain with additional pulse stretching.
 --
 -- i_clk 			- The fast clock of the destination clock domain
 -- i_data			- The slow data (clocked in a different domain than i_clk)
