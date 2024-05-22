@@ -31,7 +31,7 @@ end entity;
 
 architecture rtl of pulse_stretch is
 
-constant c_STRETCH_RATIO 	: natural := g_fAST_CLK_FREQ/g_sLOW_CLK_FREQ * 2;
+constant c_STRETCH_RATIO 	: natural := g_FAST_CLK_FREQ/g_SLOW_CLK_FREQ * 2;
 
 signal r_count					: integer range 0 to 100000000 := 0; 
 signal w_stretched			: std_logic := '0';

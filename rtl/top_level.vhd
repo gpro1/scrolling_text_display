@@ -48,6 +48,10 @@ component meta_ff
 end component;
 
 component pulse_stretch
+	generic (
+		g_FAST_CLK_FREQ	: natural := 1;
+		g_SLOW_CLK_FREQ	: natural := 1
+		);
 	port 
 	(
 		i_clk_fast	: in std_logic;

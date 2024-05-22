@@ -40,7 +40,7 @@ begin
 process(i_clk, i_rst)
 begin
 
-	if i_rst = 1 then
+	if i_rst = '1' then
 	
 		r_state 			<= idle;
 		o_i2c_addr_rw 	<= (others => '0');
@@ -101,6 +101,10 @@ begin
 				o_i2c_en	<= '0';
 				
 			end if;
+			
+		when done =>
+		
+		when others =>
 		
 		
 		end case;
