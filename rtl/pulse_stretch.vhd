@@ -18,8 +18,8 @@ use ieee.numeric_std.all;
 
 entity pulse_stretch is
  generic (
-	g_FAST_CLK_FREQ	: natural := 0;
-	g_SLOW_CLK_FREQ	: natural := 0
+	g_FAST_CLK_FREQ	: natural := 1;
+	g_SLOW_CLK_FREQ	: natural := 1
 	);
  port (
 	i_clk_fast	: in std_logic;
@@ -33,7 +33,7 @@ architecture rtl of pulse_stretch is
 
 constant c_STRETCH_RATIO 	: natural := g_fAST_CLK_FREQ/g_sLOW_CLK_FREQ * 2;
 
-signal r_count					: integer range 0 to 8 := 0; 
+signal r_count					: integer range 0 to 100000000 := 0; 
 signal w_stretched			: std_logic := '0';
 
 COMPONENT meta_ff
