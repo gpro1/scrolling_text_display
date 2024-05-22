@@ -15,6 +15,7 @@ architecture rtl of top_level is
 
 signal i2c_clk					: std_logic := '0';
 signal i2c_pll_locked		: std_logic := '0';
+signal pll_locked_delay		: unsigned(3 downto 0) := "0011";
 
 signal display_rst			: std_logic := '1';
 
@@ -27,6 +28,8 @@ signal i2c_rdy					: std_logic	:= '0'; --i2c clock domain
 signal i2c_addr				: unsigned(7 downto 0) := (others => '0');
 signal i2c_transmit_data 	: unsigned(7 downto 0) := (others => '0');
 signal i2C_receive_data		: unsigned(7 downto 0) := (others => '0');
+
+
 
 component i2c_clk_pll
 	PORT
@@ -120,6 +123,23 @@ display_driver: entity work.display_driver(rtl)
       o_i2c_data		=> i2c_transmit_data
 		);
 		
-display_rst <= '0' when i2c_pll_locked = '1' else '1';
+process(i2c_clk, i2c_pll_locked)
+begin
+
+	if i2c_pll_locked = '0' then
+		
+		display_rst <= '1';
+	
+	elsif rising_edge(i2c_clk) then
+			
+		if pll_locked_delay = 0 then
+			display_rst <= '0';
+		else
+			pll_locked_delay <= pll_locked_delay - 1;
+		end if;
+	
+	end if;
+
+end process;
 
 end rtl;
