@@ -67,7 +67,6 @@ end component;
 
 begin
 
-
 --Create I2C Clock
 i2c_clk_gen: i2c_clk_pll
 	port map (
@@ -76,18 +75,13 @@ i2c_clk_gen: i2c_clk_pll
 		c0			=> i2c_clk,
 		locked	=> i2c_pll_locked
 		);
-
---Clock domain crossing
-i2c_en_pulse_stretch: pulse_stretch
-	generic map (
-		g_FAST_CLK_FREQ => 50000000,
-		g_SLOW_CLK_FREQ => 100000
-		)
+		
+--Clock domain crossing. No pulse_stretch needed
+i2c_en_meta_ff: meta_ff
 	port map (
-		i_clk_fast 	=> i_clk_50,
-		i_clk_slow 	=> i2c_clk,
-		i_pulse		=> i2c_en_50,
-		o_pulse		=> i2c_en
+		i_clk 	=> i2c_clk,
+		i_data 	=>	i2c_en_50,
+		o_data	=> i2c_en
 		);
 
 --Clock domain crossing		

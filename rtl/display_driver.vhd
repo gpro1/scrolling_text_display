@@ -80,9 +80,11 @@ begin
 			
 		when boot_up_display =>
 		
-			o_i2c_en 	<= '1';
-			o_i2c_data 	<= x"0A";
-			r_state 		<= boot_up_display_1;
+			if r_i2c_rdy_1 = '0' and i_i2c_rdy = '1' then
+				o_i2c_en 	<= '1';
+				o_i2c_data 	<= x"0A";
+				r_state 		<= boot_up_display_1;
+			end if;
 			
 		when boot_up_display_1 =>
 			
