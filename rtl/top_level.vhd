@@ -15,14 +15,14 @@ architecture rtl of top_level is
 
 signal i2c_clk					: std_logic := '0';
 signal i2c_pll_locked		: std_logic := '0';
-signal pll_locked_delay		: unsigned(3 downto 0) := "0011";
+signal pll_locked_delay		: unsigned(3 downto 0) := "1111";
 
 signal display_rst			: std_logic := '1';
 
-signal i2c_en_50				: std_logic := '0'; --system clock domain
+--signal i2c_en_50				: std_logic := '0'; --system clock domain
 signal i2c_en					: std_logic := '0'; --i2c clock domain
 
-signal i2c_rdy_50				: std_logic := '0'; --system clock domain
+--signal i2c_rdy_50				: std_logic := '0'; --system clock domain
 signal i2c_rdy					: std_logic	:= '0'; --i2c clock domain
 
 signal i2c_addr				: unsigned(7 downto 0) := (others => '0');
@@ -68,34 +68,34 @@ end component;
 begin
 
 --Create I2C Clock
-i2c_clk_gen: i2c_clk_pll
-	port map (
-		areset 	=> '0',
-		inclk0 	=> i_clk_50,
-		c0			=> i2c_clk,
-		locked	=> i2c_pll_locked
-		);
+--i2c_clk_gen: i2c_clk_pll
+--	port map (
+--		areset 	=> '0',
+--		inclk0 	=> i_clk_50,
+--		c0			=> i2c_clk,
+--		locked	=> i2c_pll_locked
+--		);
 		
 --Clock domain crossing. No pulse_stretch needed
-i2c_en_meta_ff: meta_ff
-	port map (
-		i_clk 	=> i2c_clk,
-		i_data 	=>	i2c_en_50,
-		o_data	=> i2c_en
-		);
+--i2c_en_meta_ff: meta_ff
+--	port map (
+--		i_clk 	=> i2c_clk,
+--		i_data 	=>	i2c_en_50,
+--		o_data	=> i2c_en
+--		);
 
 --Clock domain crossing		
-i2c_rdy_meta_ff: meta_ff
-	port map (
-		i_clk 	=> i_clk_50,
-		i_data 	=>	i2c_rdy,
-		o_data	=> i2c_rdy_50
-		);
+--i2c_rdy_meta_ff: meta_ff
+--	port map (
+--		i_clk 	=> i_clk_50,
+--		i_data 	=>	i2c_rdy,
+--		o_data	=> i2c_rdy_50
+--		);
 
 --I2C Driver
-i2c_driver: entity work.i2c_driver(rtl)
+i2c_driver: entity work.i2c_driver_oversampled(rtl)
 	port map (
-		i_clk 			=> i2c_clk,
+		i_clk 			=> i_clk_50,
 		i_en				=> i2c_en, 
 		i_bus_addr_rw 	=> i2c_addr, 
 		i_bus_data		=> i2c_transmit_data, --Double-check for metastability issues
@@ -111,25 +111,24 @@ display_driver: entity work.display_driver(rtl)
 		i_clk				=> i_clk_50,
 		i_rst				=> display_rst,
 		i_i2c_data		=> i2c_receive_data,
-		i_i2c_rdy		=> i2c_rdy_50,
-		o_i2c_en			=> i2c_en_50,
+		i_i2c_rdy		=> i2c_rdy,
+		o_i2c_en			=> i2c_en,
 		o_i2c_addr_rw	=> i2c_addr,
       o_i2c_data		=> i2c_transmit_data
 		);
 		
-process(i2c_clk, i2c_pll_locked)
+i2c_pll_locked <= '1';
+		
+process(i_clk_50)
 begin
 
-	if i2c_pll_locked = '0' then
-		
-		display_rst <= '1';
-	
-	elsif rising_edge(i2c_clk) then
+	if rising_edge(i_clk_50) then
 			
 		if pll_locked_delay = 0 then
-			display_rst <= '0';
+			display_rst 		<= '0';
 		else
-			pll_locked_delay <= pll_locked_delay - 1;
+			pll_locked_delay 	<= pll_locked_delay - 1;
+			display_rst			<= '1';
 		end if;
 	
 	end if;
